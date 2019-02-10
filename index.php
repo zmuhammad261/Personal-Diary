@@ -31,7 +31,7 @@ if(array_key_exists('signin',$_POST)){
 	// 	$logerror="<p> Error Found: </p>";
 	// }
 	// else {
-		$query= "SELECT user_id FROM `user_details` WHERE user_email='".mysqli_real_escape_string($dbh,$_POST['loguserid'])."' LIMIT 1";
+		$query= "SELECT * FROM `user_details` WHERE user_email='".mysqli_real_escape_string($dbh,$_POST['loguserid'])."' LIMIT 1";
 		$stmt = mysqli_query($dbh,$query);
 		while($row = mysqli_fetch_array($stmt)){
 
@@ -42,14 +42,20 @@ if(array_key_exists('signin',$_POST)){
 		// 	$query= "SELECT user_id FROM `user_details` WHERE user_email='".mysqli_real_escape_string($dbh,$_POST['loguserid'])."' LIMIT 1";
 		// $stmt = mysqli_query($dbh,$query);
 		// 
-		$hashedPswd = md5(md5($row['user_id'].$_POST['pswd']));
+		$hashedPswd = md5(md5($row['user_id']).$_POST['pswd']);
+
+		echo $hashedPswd;
+		print_r($row['user_pswd']);
+
+		if($hashedPswd == $row['user_pswd']){
 
 				$_SESSION['user_id']= mysqli_insert_id($dbh);
 
 				if($_POST['logcheck'] == '1'){
 					setcookie("user_id",mysqli_insert_id($dbh),time()*60*60*24*7);
 				}
-				header("Location: diary.php");
+				header("Location: diary.php");		
+			}
 		}
 	}
 	// }
