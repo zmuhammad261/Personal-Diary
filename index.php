@@ -3,7 +3,7 @@ session_start();
 include 'config.php';
 $signerror = "";
 	$logerror = "";
-
+// echo mysqli_insert_id($dbh);
 if(array_key_exists("logout",$_GET)){
 	session_unset();
 	setcookie("user_id","",time()-60*60);
@@ -44,15 +44,15 @@ if(array_key_exists('signin',$_POST)){
 		// 
 		$hashedPswd = md5(md5($row['user_id']).$_POST['pswd']);
 
-		echo $hashedPswd;
-		print_r($row['user_pswd']);
+		// echo $hashedPswd;
+		// print_r($row['user_pswd']);
 
 		if($hashedPswd == $row['user_pswd']){
 
-				$_SESSION['user_id']= mysqli_insert_id($dbh);
+				$_SESSION['user_id']= $row['user_id'];
 
 				if($_POST['logcheck'] == '1'){
-					setcookie("user_id",mysqli_insert_id($dbh),time()*60*60*24*7);
+					setcookie("user_id",$row['user_id'],time()*60*60*24*7);
 				}
 				header("Location: diary.php");		
 			}
